@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Environment-specific colors for Development -->
+    <color name="env_primary">#FF5722</color>
+    <color name="env_secondary">#009688</color>
+</resources>

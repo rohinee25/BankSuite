@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Environment-specific colors for Production -->
+    <color name="env_primary">#2196F3</color>
+    <color name="env_secondary">#4CAF50</color>
+</resources>

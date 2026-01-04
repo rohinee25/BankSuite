@@ -1,0 +1,36 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    <!-- Splash screen logo -->
+    <path
+        android:fillColor="#1A237E"
+        android:pathData="M0,0h200v200h-200z" />
+
+    <group
+        android:translateX="50"
+        android:translateY="52">
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M2,92L2,40L50,6L98,40L98,92H2Z" />
+        <path
+            android:fillColor="#FFD54F"
+            android:pathData="M2,40L50,6L98,40H2Z" />
+        <path
+            android:fillColor="#1A237E"
+            android:pathData="M14,48h6v44h-6z" />
+        <path
+            android:fillColor="#1A237E"
+            android:pathData="M47,48h6v44h-6z" />
+        <path
+            android:fillColor="#1A237E"
+            android:pathData="M80,48h6v44h-6z" />
+        <path
+            android:fillColor="#1A237E"
+            android:pathData="M0,92h100v8h-100z" />
+        <path
+            android:fillColor="#1A237E"
+            android:pathData="M38,56h24v26h-24z" />
+    </group>
+</vector>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">BankSuite</string>
+    <string name="app_launcher_name">BankSuite</string>
+    <string name="bank_a_name">Bank A</string>
+    <string name="bank_b_name">Bank B</string>
+    <string name="bank_c_name">Bank C</string>
+</resources>
