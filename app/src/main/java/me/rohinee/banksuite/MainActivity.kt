@@ -7,7 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Phone
@@ -72,7 +74,11 @@ fun TopAppBar(title: @Composable () -> Unit) {
 
 @Composable
 fun BankingDashboard(modifier: Modifier = Modifier) {
-    Column(modifier = modifier.padding(16.dp)) {
+    Column(
+        modifier = modifier
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp)
+    ) {
         // Environment Info Card
         EnvironmentInfoCard()
 
@@ -102,6 +108,9 @@ fun BankingDashboard(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
 
         AppInfoCard()
+
+        // Add extra bottom padding for better scroll experience
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 

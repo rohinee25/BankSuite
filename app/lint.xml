@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- Disable specific lint checks -->
+    <issue id="MissingTranslation" severity="ignore"/>
+    <issue id="UnusedResources" severity="warning"/>
+
+    <!-- Enable specific checks -->
+    <issue id="NewApi" severity="error"/>
+    <issue id="Deprecated" severity="warning"/>
+
+    <!-- Check all dependencies -->
+    <issue id="GradleDependency" severity="warning"/>
+
+    <!-- Performance checks -->
+    <issue id="Overdraw" severity="warning"/>
+    <issue id="UnusedIds" severity="warning"/>
+
+    <!-- Security checks -->
+    <issue id="AllowBackup" severity="error"/>
+    <issue id="ExportedService" severity="error"/>
+    <issue id="ExportedProvider" severity="error"/>
+
+    <!-- Accessibility -->
+    <issue id="ContentDescription" severity="warning"/>
+
+    <!-- Compose specific -->
+    <issue id="ComposableNaming" severity="warning"/>
+    <issue id="ComposableMutableParameter" severity="warning"/>
+
+    <!-- Ignore common issues for this project -->
+    <issue id="VectorPath" severity="ignore"/>
+
+    <!-- Suppress checks in specific paths -->
+    <issue id="HardcodedText">
+        <ignore path="src/test/**"/>
+        <ignore path="src/androidTest/**"/>
+    </issue>
+</lint>
