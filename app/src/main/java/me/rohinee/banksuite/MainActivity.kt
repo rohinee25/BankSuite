@@ -17,15 +17,20 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import me.rohinee.banksuite.config.AppLogger
 import me.rohinee.banksuite.config.FeatureConfig
+import me.rohinee.banksuite.features.AutoPaymentResult
+import me.rohinee.banksuite.features.PaymentFeatureGateway
 import me.rohinee.banksuite.ui.theme.BankSuiteTheme
 
 class MainActivity : ComponentActivity() {
@@ -106,6 +111,13 @@ fun BankingDashboard(modifier: Modifier = Modifier) {
         )
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        // Auto Payment Feature Section (Bank A & B only)
+        if (PaymentFeatureGateway.isAutoPaymentFeatureAvailable()) {
+            AutoPaymentSection()
+
+            Spacer(modifier = Modifier.height(24.dp))
+        }
 
         AppInfoCard()
 
@@ -248,6 +260,113 @@ fun getFeatureItems(): List<FeatureItem> {
         FeatureItem("Loans", Icons.Default.ShoppingCart, FeatureConfig.isLoansEnabled()),
         FeatureItem("Credit Card", Icons.Default.Phone, FeatureConfig.isCreditCardEnabled()),
         FeatureItem("UPI", Icons.Default.Info, FeatureConfig.isUPIEnabled()),
+        FeatureItem("Auto Payment", Icons.Default.CheckCircle, PaymentFeatureGateway.isAutoPaymentFeatureAvailable()),
         FeatureItem("Transactions", Icons.Default.Favorite, true),
     )
+}
+
+@Composable
+fun AutoPaymentSection() {
+    val coroutineScope = rememberCoroutineScope()
+    val manager = remember { PaymentFeatureGateway.createAutoPaymentManager() }
+    var autoPaymentEnabled by remember { mutableStateOf(false) }
+    var resultMessage by remember { mutableStateOf("") }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        )
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = PaymentFeatureGateway.getFeatureDescription(),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            manager?.let {
+                Text(
+                    text = "Service: ${it.getServiceName()}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                InfoRow("Transaction Fee", "$${it.getAutoPaymentFee()}")
+                InfoRow("Max Amount", "$${it.getMaxAutoPaymentAmount()}")
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Button(
+                        onClick = {
+                            coroutineScope.launch {
+                                val result = it.enableAutoPayment("ACC-12345")
+                                resultMessage = result.message
+                                autoPaymentEnabled = result.success
+                            }
+                        },
+                        modifier = Modifier.weight(1f),
+                        enabled = !autoPaymentEnabled
+                    ) {
+                        Text("Enable")
+                    }
+
+                    Button(
+                        onClick = {
+                            coroutineScope.launch {
+                                val result = it.disableAutoPayment("ACC-12345")
+                                resultMessage = result.message
+                                autoPaymentEnabled = !result.success
+                            }
+                        },
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.error
+                        ),
+                        enabled = autoPaymentEnabled
+                    ) {
+                        Text("Disable")
+                    }
+                }
+
+                if (resultMessage.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(
+                            imageVector = if (resultMessage.contains("success", ignoreCase = true))
+                                Icons.Default.CheckCircle else Icons.Default.Close,
+                            contentDescription = null,
+                            tint = if (resultMessage.contains("success", ignoreCase = true))
+                                MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                            modifier = Modifier.size(20.dp)
+                        )
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Text(
+                            text = resultMessage,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = if (resultMessage.contains("success", ignoreCase = true))
+                                MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            } ?: run {
+                Text(
+                    text = "Feature not available for this bank variant",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        }
+    }
 }
